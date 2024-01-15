@@ -1,5 +1,5 @@
-from Bio.PDB import *
 import numpy as np
+from Bio.PDB import *
 from sklearn.neighbors import KDTree
 
 """
@@ -10,13 +10,14 @@ Released under an Apache License 2.0
 """
 
 from default_config.chemistry import (
-    polarHydrogens,
-    radii,
     acceptorAngleAtom,
     acceptorPlaneAtom,
-    hbond_std_dev,
     donorAtom,
+    hbond_std_dev,
+    polarHydrogens,
+    radii,
 )
+
 
 # Compute vertex charges based on hydrogen bond potential.
 # pdb_filename: The filename of the protonated protein.
@@ -212,4 +213,3 @@ def assignChargesToNewMesh(new_vertices, old_vertices, old_charges, seeder_opts)
         dists, result = kdt.query(testset)
         new_charges = old_charges[result]
     return new_charges
-

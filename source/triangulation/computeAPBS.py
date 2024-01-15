@@ -1,10 +1,8 @@
 import os
-import numpy
-from subprocess import Popen, PIPE
-import pymesh
+from subprocess import PIPE, Popen
 
-from default_config.global_vars import apbs_bin, pdb2pqr_bin, multivalue_bin
-import random
+import numpy
+from default_config.global_vars import apbs_bin, multivalue_bin, pdb2pqr_bin
 
 """
 computeAPBS.py: Wrapper function to compute the Poisson Boltzmann electrostatics for a surface using APBS.
@@ -13,9 +11,10 @@ This file is part of MaSIF.
 Released under an Apache License 2.0
 """
 
+
 def computeAPBS(vertices, pdb_file, tmp_file_base):
     """
-        Calls APBS, pdb2pqr, and multivalue and returns the charges per vertex
+    Calls APBS, pdb2pqr, and multivalue and returns the charges per vertex
     """
     fields = tmp_file_base.split("/")[0:-1]
     directory = "/".join(fields) + "/"
@@ -59,10 +58,10 @@ def computeAPBS(vertices, pdb_file, tmp_file_base):
 
     remove_fn = os.path.join(directory, filename_base)
     os.remove(remove_fn)
-    os.remove(remove_fn+'.csv')
-    os.remove(remove_fn+'.dx')
-    os.remove(remove_fn+'.in')
-    os.remove(remove_fn+'-input.p')
-    os.remove(remove_fn+'_out.csv')
+    os.remove(remove_fn + ".csv")
+    os.remove(remove_fn + ".dx")
+    os.remove(remove_fn + ".in")
+    os.remove(remove_fn + "-input.p")
+    os.remove(remove_fn + "_out.csv")
 
     return charges
