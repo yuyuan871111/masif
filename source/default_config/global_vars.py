@@ -54,6 +54,5 @@ else:
     print("ERROR: MULTIVALUE_BIN not set. Variable should point to MULTIVALUE program.")
     sys.exit(1)
 
-
 class NoSolutionError(Exception):
     pass
