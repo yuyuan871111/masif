@@ -3,9 +3,10 @@
 
 import sys
 
-from loadDOTS import *
-from loadPLY import *
 from pymol import cmd
+
+from .loadDOTS import *
+from .loadPLY import *
 
 cmd.extend("loadply", load_ply)
 cmd.extend("loaddots", load_dots)
