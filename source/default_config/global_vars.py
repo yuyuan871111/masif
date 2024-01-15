@@ -4,7 +4,6 @@
 # Modified by Yu-Yuan Yang (2024)
 
 import configparser
-import os
 import sys
 
 from IPython.core.debugger import set_trace
@@ -13,7 +12,9 @@ epsilon = 1.0e-6
 
 # Read config file.
 config = configparser.ConfigParser()
-config.read("config.cfg")
+path_args = __file__.split("/")[0:-1]
+root_path = "/".join(path_args)
+config.read(f"{root_path}/config.cfg")
 config.sections()
 
 # Set the environment variables for the programs used by MaSIF.
@@ -23,6 +24,13 @@ if "MSMS_BIN" in config["Default"]:
 else:
     set_trace()
     print("ERROR: MSMS_BIN not set. Variable should point to MSMS program.")
+    sys.exit(1)
+
+reduce_bin = ""
+if "REDUCE_BIN" in config["Default"]:
+    reduce_bin = config["Default"]["REDUCE_BIN"]
+else:
+    print("ERROR: REDUCE_BIN not set. Variable should point to REDUCE program.")
     sys.exit(1)
 
 pdb2pqr_bin = ""

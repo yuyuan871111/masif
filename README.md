@@ -72,7 +72,7 @@ MaSIF relies on external software/libraries to handle protein databank files and
 to compute chemical/geometric features and coordinates, and to perform neural network calculations. 
 The following is the list of required libraries and programs, as well as the version on which it was tested (in parenthesis).
 * [Python](https://www.python.org/) (3.6)
-* [reduce](http://kinemage.biochem.duke.edu/software/reduce.php) (3.23). To add protons to proteins. 
+* [reduce](https://github.com/rlabduke/reduce/tree/master) (3.23). To add protons to proteins. 
 * [MSMS](http://mgltools.scripps.edu/packages/MSMS/) (2.6.1). To compute the surface of proteins. 
 * [BioPython](https://github.com/biopython/biopython) (1.66) . To parse PDB files. 
 * [PyMesh](https://github.com/PyMesh/PyMesh) (0.1.14). To handle ply surface files, attributes, and to regularize meshes.
