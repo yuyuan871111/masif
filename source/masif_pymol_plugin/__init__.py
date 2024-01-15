@@ -7,6 +7,7 @@ from pymol import cmd
 
 from .loadDOTS import *
 from .loadPLY import *
+from .simple_mesh import *
 
 
 def __init_plugin__(app):
