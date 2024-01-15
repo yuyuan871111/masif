@@ -1,14 +1,16 @@
 # Header variables and parameters.
-import os
-import numpy as np
-from IPython.core.debugger import set_trace
 import importlib
+import os
 import sys
-from default_config.masif_opts import masif_opts
-from masif_modules.MaSIF_ligand import MaSIF_ligand
-from masif_modules.read_ligand_tfrecords import _parse_function
-from sklearn.metrics import confusion_matrix
+
+import numpy as np
 import tensorflow as tf
+from IPython.core.debugger import set_trace
+from sklearn.metrics import confusion_matrix
+
+from ..default_config.masif_opts import masif_opts
+from ..masif_modules.MaSIF_ligand import MaSIF_ligand
+from ..masif_modules.read_ligand_tfrecords import _parse_function
 
 """
 masif_ligand_train.py: Train MaSIF-ligand. 
@@ -268,7 +270,14 @@ with tf.Session() as sess:
                 learning_obj.keep_prob: 1.0,
             }
 
-            _, training_loss, norm_grad, logits, logits_softmax, computed_loss = learning_obj.session.run(
+            (
+                _,
+                training_loss,
+                norm_grad,
+                logits,
+                logits_softmax,
+                computed_loss,
+            ) = learning_obj.session.run(
                 [
                     learning_obj.optimizer,
                     learning_obj.data_loss,
@@ -300,4 +309,3 @@ with tf.Session() as sess:
             total_iterations += 1
             if total_iterations == 40000:
                 break
-

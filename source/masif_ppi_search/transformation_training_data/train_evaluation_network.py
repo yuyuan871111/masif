@@ -1,15 +1,16 @@
-import tensorflow as tf
-import numpy as np
-from pathlib import Path
 import glob
-from scipy.spatial import cKDTree
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_auc_score
-from tensorflow import keras
 import os
-import time
 import pickle
 import sys
+import time
+from pathlib import Path
+
+import numpy as np
+import tensorflow as tf
+from scipy.spatial import cKDTree
+from sklearn.metrics import roc_auc_score
+from sklearn.model_selection import train_test_split
+from tensorflow import keras
 
 """
 train_evaluation_network.py: Train a neural network to score protein complex alignments (based on MaSIF)
@@ -27,22 +28,18 @@ tf.random.set_random_seed(42)
 
 data_dir = "transformation_data/"
 
-with open(
-    "../lists/training.txt"
-) as f:
+with open("../lists/training.txt") as f:
     training_list = f.read().splitlines()
 
-with open(
-    "../lists/testing.txt"
-) as f:
+with open("../lists/testing.txt") as f:
     testing_list = f.read().splitlines()
 
-n_positives = 1 # Number of correctly aligned to train on
-n_negatives = 200 # Number of incorrectly aligned
+n_positives = 1  # Number of correctly aligned to train on
+n_negatives = 200  # Number of incorrectly aligned
 max_rmsd = 5.0
 max_npoints = 200
 n_features = 3
-data_list = glob.glob(data_dir+'*')
+data_list = glob.glob(data_dir + "*")
 data_list = [
     d
     for d in data_list
@@ -87,7 +84,9 @@ for i, d in enumerate(data_list):
     chosen_negatives = np.random.choice(negative_alignments, n_negatives, replace=False)
     chosen_alignments = np.concatenate([chosen_positives, chosen_negatives])
     try:
-        features = np.load(d + "/" + "features.npy", encoding="latin1", allow_pickle=True)
+        features = np.load(
+            d + "/" + "features.npy", encoding="latin1", allow_pickle=True
+        )
     except:
         continue
     n_sources = len(features)
@@ -181,5 +180,5 @@ history = model.fit(
     callbacks=callbacks,
 )
 
-#with open("histories/history_dict_3feat_new.pkl", "wb") as f:
+# with open("histories/history_dict_3feat_new.pkl", "wb") as f:
 #    pickle.dump(history.history, f)

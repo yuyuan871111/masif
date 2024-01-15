@@ -1,13 +1,15 @@
 import numpy as np
+
 """
 read_msms.py: Read an msms output file that was output by MSMS (MSMS is the program we use to build a surface) 
 Pablo Gainza - LPDI STI EPFL 2019
 Released under an Apache License 2.0
 """
 
+
 def read_msms(file_root):
     # read the surface from the msms output. MSMS outputs two files: {file_root}.vert and {file_root}.face
-    
+
     vertfile = open(file_root + ".vert")
     meshdata = (vertfile.read().rstrip()).split("\n")
     vertfile.close()
@@ -16,7 +18,8 @@ def read_msms(file_root):
     count = {}
     header = meshdata[2].split()
     count["vertices"] = int(header[0])
-    ## Data Structures
+
+    # Data Structures
     vertices = np.zeros((count["vertices"], 3))
     normalv = np.zeros((count["vertices"], 3))
     atom_id = [""] * count["vertices"]
@@ -57,4 +60,3 @@ def read_msms(file_root):
     assert count["faces"] == 0
 
     return vertices, faces, normalv, res_id
-

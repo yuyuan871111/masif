@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
-import pymesh
-from IPython.core.debugger import set_trace
-import time
-import os
-from default_config.masif_opts import masif_opts
-import numpy as np
-import os
-import matplotlib.pyplot as plt
-import glob
-from Bio.PDB import *
 import copy
-import scipy.sparse as spio
+import glob
+import os
 import sys
+import time
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pymesh
+import scipy.sparse as spio
+from Bio.PDB import *
+from IPython.core.debugger import set_trace
+
+from ...default_config.masif_opts import masif_opts
 
 start_time = time.time()
 

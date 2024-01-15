@@ -1,31 +1,43 @@
 #!/usr/bin/env python
 # coding: utf-8
+import copy
+import glob
+import os
+import sys
+import time
+
+import matplotlib.pyplot as plt
+import numpy as np
 import pymesh
+import scipy.sparse as spio
+from Bio.PDB import *
 from IPython.core.debugger import set_trace
 from scipy.spatial import cKDTree
-import time
-import os
-import numpy as np
-import os
-import matplotlib.pyplot as plt
-import glob
-from Bio.PDB import *
-import copy
-import scipy.sparse as spio
-import sys
-
-# import the right version of open3d
-from geometry.open3d_import import PointCloud, read_point_cloud, \
-        Vector3dVector, Feature, registration_ransac_based_on_feature_matching, \
-       TransformationEstimationPointToPoint, CorrespondenceCheckerBasedOnEdgeLength, \
-      CorrespondenceCheckerBasedOnDistance, CorrespondenceCheckerBasedOnNormal, \
-     RANSACConvergenceCriteria 
 
 # Local imports
-from default_config.masif_opts import masif_opts
-from alignment_utils_masif_search import get_patch_geo, multidock, \
-        subsample_patch_coords, compute_nn_score, get_target_vix
-from transformation_training_data.score_nn import ScoreNN
+from ...default_config.masif_opts import masif_opts
+
+# import the right version of open3d
+from ...geometry.open3d_import import (
+    CorrespondenceCheckerBasedOnDistance,
+    CorrespondenceCheckerBasedOnEdgeLength,
+    CorrespondenceCheckerBasedOnNormal,
+    Feature,
+    PointCloud,
+    RANSACConvergenceCriteria,
+    TransformationEstimationPointToPoint,
+    Vector3dVector,
+    read_point_cloud,
+    registration_ransac_based_on_feature_matching,
+)
+from ..alignment_utils_masif_search import (
+    compute_nn_score,
+    get_patch_geo,
+    get_target_vix,
+    multidock,
+    subsample_patch_coords,
+)
+from ..transformation_training_data.score_nn import ScoreNN
 
 """
 Hard-coded configuration, change accordingly!"
@@ -42,7 +54,7 @@ Descriptor cutoff: This is the key parameter for the speed of the method. The lo
 the faster the method, but also the higher the number of false negatives. Values ABOVE
 this cutoff are discareded. Recommended values: 1.7-2.2. 
 """
-DESC_DIST_CUTOFF=1.7
+DESC_DIST_CUTOFF = 1.7
 
 """
 Iface cutoff: Patches are also filtered by their MaSIF-site score. Patches whose center
@@ -50,11 +62,13 @@ point has a value BELOW this score are discarded.
 The higher the value faster the method, but also the higher the number of false negatives. 
 Recommended values: 0.8
 """
-IFACE_CUTOFF=0.8
+IFACE_CUTOFF = 0.8
+
 
 def blockPrint():
     sys.stdout = open(os.devnull, "w")
     sys.stderr = open(os.devnull, "w")
+
 
 def enablePrint():
     sys.stdout = sys.__stdout__
@@ -74,23 +88,13 @@ Released under an Apache License 2.0
 masif_root = os.environ["masif_root"]
 top_dir = os.path.join(masif_root, "data/masif_pdl1_benchmark/")
 surf_dir = os.path.join(top_dir, masif_opts["ply_chain_dir"])
-iface_dir = os.path.join(
-    top_dir, masif_opts["site"]["out_pred_dir"]
-)
-ply_iface_dir = os.path.join(
-    top_dir, masif_opts["site"]["out_surf_dir"]
-)
+iface_dir = os.path.join(top_dir, masif_opts["site"]["out_pred_dir"])
+ply_iface_dir = os.path.join(top_dir, masif_opts["site"]["out_surf_dir"])
 
 desc_dir = os.path.join(masif_opts["ppi_search"]["desc_dir"])
 
 pdb_dir = os.path.join(top_dir, masif_opts["pdb_chain_dir"])
-precomp_dir = os.path.join(
-    top_dir, masif_opts["site"]["masif_precomputation_dir"]
-)
-
-
-
-
+precomp_dir = os.path.join(top_dir, masif_opts["site"]["masif_precomputation_dir"])
 
 
 # Go through every 9A patch in top_dir -- get the one with the highest iface mean 12A around it.
@@ -121,7 +125,6 @@ out_patch.close()
 def match_descriptors(
     in_desc_dir, in_iface_dir, pids, target_desc, desc_dist_cutoff=2.2, iface_cutoff=0.8
 ):
-
     all_matched_names = []
     all_matched_vix = []
     all_matched_desc_dist = []
@@ -161,6 +164,7 @@ def match_descriptors(
     print("Iterated over {} proteins.".format(count_proteins))
     return all_matched_names, all_matched_vix, all_matched_desc_dist, count_proteins
 
+
 def align_and_save(
     out_filename_base,
     patch,
@@ -188,6 +192,7 @@ def align_and_save(
 
     return 0
 
+
 ## Load the structures of the target
 target_pdb_id = "4ZQK"
 target_chain = "A"
@@ -207,8 +212,12 @@ inlier_scores = []
 inlier_pos = []
 
 (matched_names, matched_vix, matched_desc_dist, count_proteins) = match_descriptors(
-    desc_dir, iface_dir, ["p1", "p2"], target_desc[target_vix],
-    desc_dist_cutoff=DESC_DIST_CUTOFF, iface_cutoff=IFACE_CUTOFF
+    desc_dir,
+    iface_dir,
+    ["p1", "p2"],
+    target_desc[target_vix],
+    desc_dist_cutoff=DESC_DIST_CUTOFF,
+    iface_cutoff=IFACE_CUTOFF,
 )
 
 matched_names = np.concatenate(matched_names, axis=0)
@@ -251,13 +260,16 @@ for name in matched_dict.keys():
 
     tic = time.time()
     source_vix = matched_dict[name]
-#    try:
+    #    try:
     source_coords = subsample_patch_coords(
-            ppi_pair_id, pid,precomp_dir, cv=source_vix, 
-        )
-#    except:
-#    print("Coordinates not found. continuing.")
-#    continue
+        ppi_pair_id,
+        pid,
+        precomp_dir,
+        cv=source_vix,
+    )
+    #    except:
+    #    print("Coordinates not found. continuing.")
+    #    continue
     source_desc = np.load(
         os.path.join(desc_dir, ppi_pair_id, pid + "_desc_straight.npy")
     )
@@ -273,7 +285,7 @@ for name in matched_dict.keys():
         target_patch_descs,
         target_ckdtree,
         nn_model,
-        use_icp = True 
+        use_icp=True,
     )
     scores = np.asarray(all_source_scores)
     desc_scores.append(scores)
@@ -282,7 +294,6 @@ for name in matched_dict.keys():
     top_scorers = np.where(scores > 0.9)[0]
 
     if len(top_scorers) > 0:
-
         # Load source structure
         # Perform the transformation on the atoms
         for j in top_scorers:
@@ -309,4 +320,3 @@ for name in matched_dict.keys():
 
 end_time = time.time()
 out_log.write("Took {}s\n".format(end_time - start_time))
-

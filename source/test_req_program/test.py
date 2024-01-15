@@ -6,7 +6,7 @@ Released under an Apache License 2.0
 
 from subprocess import PIPE, Popen
 
-from default_config.global_vars import reduce_bin, msms_bin
+from ..default_config.global_vars import msms_bin, reduce_bin
 
 
 def test_reduce():
@@ -25,3 +25,14 @@ def test_msms():
     stdout, stderr = p2.communicate()
     print(stdout.decode("utf-8"))
     print(stderr.decode("utf-8"))
+
+
+"""
+def test_xyzrn():
+    # Test xyzrn
+    args = [xyzrn_bin, "-h"]
+    p2 = Popen(args, stdout=PIPE, stderr=PIPE)
+    stdout, stderr = p2.communicate()
+    print(stdout.decode("utf-8"))
+    print(stderr.decode("utf-8"))
+"""

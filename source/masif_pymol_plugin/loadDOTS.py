@@ -1,9 +1,10 @@
 # Pablo Gainza Cirauqui 2016
 # This pymol function loads dot files into pymol.
+import os.path
+
+import numpy as np
 from pymol import cmd, stored
 from pymol.cgo import *
-import os.path
-import numpy as np
 
 colorDict = {
     "sky": [COLOR, 0.0, 0.76, 1.0],
@@ -67,4 +68,3 @@ def load_dots(
         group_names = name
         cmd.load_cgo(obj, name, 1.0)
     # Draw normals
-

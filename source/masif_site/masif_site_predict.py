@@ -1,12 +1,14 @@
 # Header variables and parameters.
-import time
+import importlib
 import os
+import sys
+import time
+
 import numpy as np
 from IPython.core.debugger import set_trace
-import sys
-import importlib
-from masif_modules.train_masif_site import run_masif_site
-from default_config.masif_opts import masif_opts
+
+from ..default_config.masif_opts import masif_opts
+from ..masif_modules.train_masif_site import run_masif_site
 
 """
 masif_site_predict.py: Evaluate one or multiple proteins on MaSIF-site. 
@@ -14,6 +16,7 @@ Pablo Gainza - LPDI STI EPFL 2019
 This file is part of MaSIF.
 Released under an Apache License 2.0
 """
+
 
 # Apply mask to input_feat
 def mask_input_feat(input_feat, mask):
@@ -71,7 +74,7 @@ for ppi_pair_id in ppi_pair_ids:
     print(ppi_pair_id)
     in_dir = parent_in_dir + ppi_pair_id + "/"
 
-    fields = ppi_pair_id.split('_')
+    fields = ppi_pair_id.split("_")
     if len(fields) < 2:
         continue
     pdbid = ppi_pair_id.split("_")[0]
@@ -103,7 +106,9 @@ for ppi_pair_id in ppi_pair_ids:
         input_feat = np.load(in_dir + pid + "_input_feat.npy")
         input_feat = mask_input_feat(input_feat, params["feat_mask"])
         mask = np.load(in_dir + pid + "_mask.npy")
-        indices = np.load(in_dir + pid + "_list_indices.npy", encoding="latin1", allow_pickle=True)
+        indices = np.load(
+            in_dir + pid + "_list_indices.npy", encoding="latin1", allow_pickle=True
+        )
         labels = np.zeros((len(mask)))
 
         print("Total number of patches:{} \n".format(len(mask)))
@@ -124,9 +129,8 @@ for ppi_pair_id in ppi_pair_ids:
                 len(scores[0])
             )
         )
-        print("GPU time (real time, not actual GPU time): {:.3f}s".format(toc-tic))
+        print("GPU time (real time, not actual GPU time): {:.3f}s".format(toc - tic))
         np.save(
             params["out_pred_dir"] + "/pred_" + pdbid + "_" + chains[ix] + ".npy",
             scores,
         )
-

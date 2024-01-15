@@ -1,11 +1,13 @@
-import time
 import math
-from sklearn import metrics
-import numpy as np
-import sys
 import os
+import sys
+import time
+
+import numpy as np
 from IPython.core.debugger import set_trace
+from sklearn import metrics
 from sklearn.metrics import accuracy_score, roc_auc_score
+
 
 # Features and theta are flipped for the binder in construct_batch (except for hydrophobicity).
 def construct_batch(
@@ -25,7 +27,6 @@ def construct_batch(
     neg_mask,
     c_neg_training_idx_2=None,
 ):
-
     batch_rho_coords_binder = np.expand_dims(
         binder_rho_wrt_center[c_pos_training_idx], 2
     )
@@ -108,7 +109,7 @@ def construct_batch_val_test(
     batch_theta_coords = np.expand_dims(theta_wrt_center[c_idx], 2)
     batch_input_feat = input_feat[c_idx]
     batch_mask = mask[c_idx]
-    batch_mask = np.expand_dims(batch_mask,2)
+    batch_mask = np.expand_dims(batch_mask, 2)
     # Flip features and theta (except hydrophobicity)
     if flip:
         batch_input_feat = -batch_input_feat
@@ -137,7 +138,12 @@ def compute_val_test_desc(
     for kk in range(num_batches):
         c_idx = idx[np.arange(kk * batch_size, min((kk + 1) * batch_size, len(idx)))]
 
-        batch_rho_coords, batch_theta_coords, batch_input_feat, batch_mask = construct_batch_val_test(
+        (
+            batch_rho_coords,
+            batch_theta_coords,
+            batch_input_feat,
+            batch_mask,
+        ) = construct_batch_val_test(
             c_idx, rho_wrt_center, theta_wrt_center, input_feat, mask, flip=flip
         )
 
@@ -195,7 +201,6 @@ def train_ppi_search(
     batch_size=32,
     batch_size_val_test=1000,
 ):
-
     out_dir = params["model_dir"]
     logfile = open(out_dir + "log.txt", "w")
     logfile.write(
@@ -258,7 +263,12 @@ def train_ppi_search(
         c_neg_training_idx_2 = None
 
         # Features and theta are flipped for the binder in construct_batch (except for hydrophobicity).
-        batch_rho_coords, batch_theta_coords, batch_input_feat, batch_mask = construct_batch(
+        (
+            batch_rho_coords,
+            batch_theta_coords,
+            batch_input_feat,
+            batch_mask,
+        ) = construct_batch(
             binder_rho_wrt_center,
             binder_theta_wrt_center,
             binder_input_feat,
@@ -476,4 +486,3 @@ def train_ppi_search(
                 np.save(out_dir + "neg_desc.npy", neg_desc)
                 np.save(out_dir + "neg_test_idx.npy", neg_test_idx)
                 np.save(out_dir + "neg_desc_2.npy", neg_desc_2)
-

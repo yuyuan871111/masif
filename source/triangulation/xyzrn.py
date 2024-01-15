@@ -1,5 +1,6 @@
 from Bio.PDB import *
-from default_config.chemistry import radii, polarHydrogens
+
+from ..default_config.chemistry import polarHydrogens, radii
 
 """
 xyzrn.py: Read a pdb file and output it is in xyzrn for use in MSMS
@@ -8,10 +9,11 @@ This file is part of MaSIF.
 Released under an Apache License 2.0
 """
 
+
 def output_pdb_as_xyzrn(pdbfilename, xyzrnfilename):
     """
-        pdbfilename: input pdb filename
-        xyzrnfilename: output in xyzrn format.
+    pdbfilename: input pdb filename
+    xyzrnfilename: output in xyzrn format.
     """
     parser = PDBParser()
     struct = parser.get_structure(pdbfilename, pdbfilename)
@@ -48,4 +50,3 @@ def output_pdb_as_xyzrn(pdbfilename, xyzrnfilename):
             )
         if coords is not None:
             outfile.write(coords + " " + radii[atomtype] + " 1 " + full_id + "\n")
-

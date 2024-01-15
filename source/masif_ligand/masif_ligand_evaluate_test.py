@@ -1,13 +1,15 @@
-import os
-import numpy as np
-from IPython.core.debugger import set_trace
 import importlib
+import os
 import sys
-from default_config.masif_opts import masif_opts
-from masif_modules.MaSIF_ligand import MaSIF_ligand
-from masif_modules.read_ligand_tfrecords import _parse_function
-from sklearn.metrics import confusion_matrix
+
+import numpy as np
 import tensorflow as tf
+from IPython.core.debugger import set_trace
+from sklearn.metrics import confusion_matrix
+
+from ..default_config.masif_opts import masif_opts
+from ..masif_modules.MaSIF_ligand import MaSIF_ligand
+from ..masif_modules.read_ligand_tfrecords import _parse_function
 
 """
 masif_ligand_evaluate_test: Evaluate and test MaSIF-ligand.
@@ -105,4 +107,3 @@ with tf.Session() as sess:
             pdb_logits_softmax.append(samples_logits_softmax)
         np.save(test_set_out_dir + "{}_labels.npy".format(pdb), pdb_labels)
         np.save(test_set_out_dir + "{}_logits.npy".format(pdb), pdb_logits_softmax)
-

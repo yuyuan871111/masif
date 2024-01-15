@@ -2,7 +2,8 @@ import os
 from subprocess import PIPE, Popen
 
 import numpy
-from default_config.global_vars import apbs_bin, multivalue_bin, pdb2pqr_bin
+
+from ..default_config.global_vars import apbs_bin, multivalue_bin, pdb2pqr_bin
 
 """
 computeAPBS.py: Wrapper function to compute the Poisson Boltzmann electrostatics for a surface using APBS.

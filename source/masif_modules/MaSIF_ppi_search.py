@@ -1,11 +1,11 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 
 class MaSIF_ppi_search:
 
     """
-    The neural network model to classify two patches into binders or not binders. 
+    The neural network model to classify two patches into binders or not binders.
     """
 
     def count_number_parameters(self):
@@ -182,7 +182,6 @@ class MaSIF_ppi_search:
         idx_gpu="/device:GPU:0",
         feat_mask=[1.0, 1.0, 1.0, 1.0, 1.0],
     ):
-
         # order of the spectral filters
         self.max_rho = max_rho
         self.n_thetas = n_thetas
@@ -199,7 +198,6 @@ class MaSIF_ppi_search:
             self.graph = g
             tf.set_random_seed(0)
             with tf.device(idx_gpu):
-
                 initial_coords = self.compute_initial_coordinates()
                 mu_rho_initial = np.expand_dims(initial_coords[:, 0], 0).astype(
                     "float32"
@@ -326,4 +324,3 @@ class MaSIF_ppi_search:
                 init = tf.global_variables_initializer()
                 self.session.run(init)
                 self.count_number_parameters()
-

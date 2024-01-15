@@ -1,5 +1,5 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 
 class MaSIF_ligand:
@@ -143,7 +143,6 @@ class MaSIF_ligand:
         feat_mask=[1.0, 1.0, 1.0, 1.0],
         costfun="dprime",
     ):
-
         # order of the spectral filters
         self.max_rho = max_rho
         self.n_thetas = n_thetas
@@ -161,7 +160,6 @@ class MaSIF_ligand:
             self.graph = g
             tf.set_random_seed(0)
             for pr in range(1):
-
                 initial_coords = self.compute_initial_coordinates()
                 # self.rotation_angles = tf.Variable(np.arange(0, 2*np.pi, 2*np.pi/self.n_rotations).astype('float32'))
                 mu_rho_initial = np.expand_dims(initial_coords[:, 0], 0).astype(
@@ -303,4 +301,3 @@ class MaSIF_ligand:
                 init = tf.global_variables_initializer()
                 self.session.run(init)
                 self.count_number_parameters()
-

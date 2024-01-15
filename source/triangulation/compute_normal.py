@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.matlib import repmat
+
 """
 compute_normal.py: Compute the normals of a closed shape.
 Pablo Gainza - LPDI STI EPFL 2019
@@ -7,23 +8,22 @@ This file is part of MaSIF, based on previous matlab code by Gabriel Peyre, conv
 """
 
 ###
-from default_config.global_vars import epsilon as eps
+from ..default_config.global_vars import epsilon as eps
 
 
 def compute_normal(vertex, face):
-
     """
     compute_normal - compute the normal of a triangulation
     vertex: 3xn matrix of vertices
     face: 3xm matrix of face indices.
-    
+
       normal,normalf = compute_normal(vertex,face)
-    
+
       normal(i,:) is the normal at vertex i.
       normalf(j,:) is the normal at face j.
-    
+
     Copyright (c) 2004 Gabriel Peyr
-    Converted to Python by Pablo Gainza LPDI EPFL 2017  
+    Converted to Python by Pablo Gainza LPDI EPFL 2017
     """
 
     vertex = vertex.T
@@ -36,7 +36,7 @@ def compute_normal(vertex, face):
         vertex[:, face[1, :]] - vertex[:, face[0, :]],
         vertex[:, face[2, :]] - vertex[:, face[0, :]],
     )
-    sum_squares = np.sum(normalf ** 2, 0)
+    sum_squares = np.sum(normalf**2, 0)
     d = np.sqrt(sum_squares)
     d[d < eps] = 1
     normalf = normalf / repmat(d, 3, 1)
@@ -48,7 +48,7 @@ def compute_normal(vertex, face):
             normal[:, f[j]] = normal[:, f[j]] + normalf[:, i]
 
     # normalize
-    d = np.sqrt(np.sum(normal ** 2, 0))
+    d = np.sqrt(np.sum(normal**2, 0))
     d[d < eps] = 1
     normal = normal / repmat(d, 3, 1)
     # enforce that the normal are outward
@@ -63,7 +63,6 @@ def compute_normal(vertex, face):
 
 
 def crossp(x, y):
-
     # x and y are (m,3) dimensional
     z = np.zeros((x.shape))
     z[0, :] = np.multiply(x[1, :], y[2, :]) - np.multiply(x[2, :], y[1, :])

@@ -8,7 +8,7 @@ Modified by Yu-Yuan Yang (2024)
 
 from subprocess import PIPE, Popen
 
-from default_config.global_vars import reduce_bin
+from ..default_config.global_vars import reduce_bin
 
 
 def protonate(in_pdb_file, out_pdb_file):

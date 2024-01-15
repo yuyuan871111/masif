@@ -1,7 +1,9 @@
 import os
 import sys
+
 from SBI.structure import PDB
-from default_config.masif_opts import masif_opts
+
+from ..default_config.masif_opts import masif_opts
 
 ligands = ["ADP", "COA", "FAD", "HEM", "NAD", "NAP", "SAM"]
 

@@ -3,10 +3,10 @@ import random
 import sys
 from subprocess import PIPE, Popen
 
-from default_config.global_vars import msms_bin
-from default_config.masif_opts import masif_opts
-from input_output.read_msms import read_msms
-from triangulation.xyzrn import output_pdb_as_xyzrn
+from ..default_config.global_vars import msms_bin
+from ..default_config.masif_opts import masif_opts
+from ..input_output.read_msms import read_msms
+from ..triangulation.xyzrn import output_pdb_as_xyzrn
 
 
 # Pablo Gainza LPDI EPFL 2017-2019

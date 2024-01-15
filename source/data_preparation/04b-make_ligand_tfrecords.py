@@ -1,10 +1,12 @@
+import glob
+import os
+from random import shuffle
+
 import numpy as np
 import tensorflow as tf
-from random import shuffle
-import os
-import glob
 from scipy import spatial
-from default_config.masif_opts import masif_opts
+
+from ..default_config.masif_opts import masif_opts
 
 params = masif_opts["ligand"]
 ligands = ["ADP", "COA", "FAD", "HEM", "NAD", "NAP", "SAM"]

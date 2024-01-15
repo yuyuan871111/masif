@@ -1,10 +1,12 @@
 # Header variables and parameters.
+import importlib
 import os
+import sys
+
 import numpy as np
 from IPython.core.debugger import set_trace
-import importlib
-import sys
-from default_config.masif_opts import masif_opts
+
+from ..default_config.masif_opts import masif_opts
 
 """
 masif_site_train.py: Entry function to train MaSIF-site.
@@ -66,8 +68,7 @@ if not os.path.exists(params["model_dir"]):
     os.makedirs(params["model_dir"])
 else:
     # Load existing network.
-    print ('Reading pre-trained network')
-    learning_obj.saver.restore(learning_obj.session, params['model_dir']+'model')
+    print("Reading pre-trained network")
+    learning_obj.saver.restore(learning_obj.session, params["model_dir"] + "model")
 
 train_masif_site(learning_obj, params)
-

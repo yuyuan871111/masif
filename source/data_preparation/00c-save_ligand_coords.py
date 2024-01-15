@@ -1,9 +1,10 @@
 import os
-import numpy as np
 import sys
 
+import numpy as np
 from SBI.structure import PDB
-from default_config.masif_opts import masif_opts
+
+from ..default_config.masif_opts import masif_opts
 
 in_fields = sys.argv[1].split("_")
 pdb_id = in_fields[0]

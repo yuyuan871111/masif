@@ -1,9 +1,13 @@
-from pymol import cmd, stored
-import sys
-import os, math, re
-from pymol.cgo import *
+import math
+import os
 import os.path
+import re
+import sys
+
 import numpy as np
+from pymol import cmd, stored
+from pymol.cgo import *
+
 """
    loadPLY.py: This pymol function loads ply files into pymol.
     Pablo Gainza - LPDI STI EPFL 2016-2019
@@ -25,6 +29,7 @@ colorDict = {
     "white": [COLOR, 1.0, 1.0, 1.0],
     "gray": [COLOR, 0.9, 0.9, 0.9],
 }
+
 
 # Create a gradient color from color 1 to whitish, to color 2. val goes from 0 (color1) to 1 (color2).
 def color_gradient(vals, color1, color2):
@@ -466,4 +471,3 @@ def load_giface(filename, color="white", name="giface", dotSize=0.2, lineSize=1.
     # obj.append(END)
     name = "giface_verts_" + filename
     cmd.load_cgo(obj, name, 1.0)
-
