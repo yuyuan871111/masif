@@ -13,7 +13,7 @@ Released under an Apache License 2.0
 """
 
 
-def computeAPBS(vertices, pdb_file, tmp_file_base):
+def computeAPBS(vertices, pdb_file, tmp_file_base, pdb2pqr_skip=False):
     """
     Calls APBS, pdb2pqr, and multivalue and returns the charges per vertex
     """
@@ -21,19 +21,23 @@ def computeAPBS(vertices, pdb_file, tmp_file_base):
     directory = "/".join(fields) + "/"
     filename_base = tmp_file_base.split("/")[-1]
     pdbname = pdb_file.split("/")[-1]
-    args = [
-        pdb2pqr_bin,
-        "--ff=PARSE",
-        "--whitespace",
-        "--noopt",
-        "--apbs-input",
-        f"{filename_base}.in",
-        pdbname,  # input: PDB file
-        filename_base,  # output: PQR formated file
-    ]
-    p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
-    stdout, stderr = p2.communicate()
 
+    # Prepare the APBS input file with pdb2pqr
+    if not pdb2pqr_skip:
+        args = [
+            pdb2pqr_bin,
+            "--ff=PARSE",
+            "--whitespace",
+            "--noopt",
+            "--apbs-input",
+            f"{filename_base}.in",
+            pdbname,  # input: PDB file
+            filename_base,  # output: PQR formated file
+        ]
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        stdout, stderr = p2.communicate()
+
+    # Calculate potentials with APBS
     args = [apbs_bin, filename_base + ".in"]
     p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
     stdout, stderr = p2.communicate()
@@ -43,13 +47,13 @@ def computeAPBS(vertices, pdb_file, tmp_file_base):
         vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
     vertfile.close()
 
+    # Access the potential for each vertex with multivalue
     args = [
         multivalue_bin,
         filename_base + ".csv",
         filename_base + ".dx",
         filename_base + "_out.csv",
     ]
-    breakpoint()
     p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
     stdout, stderr = p2.communicate()
 
@@ -64,7 +68,7 @@ def computeAPBS(vertices, pdb_file, tmp_file_base):
     os.remove(remove_fn + ".csv")
     os.remove(remove_fn + ".dx")
     os.remove(remove_fn + ".in")
-    # os.remove(remove_fn + "-input.p")
+    os.remove(os.path.join(directory, "io.mc"))
     os.remove(remove_fn + "_out.csv")
 
     return charges
