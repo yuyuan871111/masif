@@ -14,3 +14,4 @@ def __init_plugin__(app):
     cmd.extend("loadply", load_ply)
     cmd.extend("loaddots", load_dots)
     cmd.extend("loadgiface", load_giface)
+    cmd.extend("loadply_interest", load_ply_interest)

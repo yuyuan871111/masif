@@ -104,6 +104,52 @@ def charge_color(charges):
 
     return mycolor
 
+def load_ply_interest(
+    filename, color="white", name="ply", dotSize=0.2, lineSize=0.5, doStatistics=False
+):
+    from .simple_mesh import Simple_mesh
+    mesh = Simple_mesh()
+    mesh.load_mesh(filename)
+
+    ignore_normal = False
+    with_normal = False
+    with_color = False
+
+    group_names = ""
+
+    verts = mesh.vertices
+    try:
+        charge = mesh.get_attribute("vertex_charge")
+        color_array = charge_color(charge)
+    except:
+        print("Could not load vertex charges.")
+        color_array = [colorDict["green"]] * len(verts)
+    if "vertex_nx" in mesh.get_attribute_names():
+        nx = mesh.get_attribute("vertex_nx")
+        ny = mesh.get_attribute("vertex_ny")
+        nz = mesh.get_attribute("vertex_nz")
+        normals = np.vstack([nx, ny, nz]).T
+        print(normals.shape)
+
+    # Draw vertices
+    obj = []
+    color = "green"
+    # print(mesh.get_attribute_names())
+    interest_vertices = mesh.get_attribute("vertex_interest")
+
+    for v_ix in range(len(verts)):
+        vert = verts[v_ix]
+        colorToAdd = color_array[v_ix]
+        # Vertices
+        if interest_vertices[v_ix] == 1:
+            obj.extend(colorToAdd)
+            obj.extend([SPHERE, vert[0], vert[1], vert[2], dotSize])
+
+    name = "vert_" + filename
+    group_names = name
+    cmd.load_cgo(obj, name, 1.0)
+    obj = []
+
 
 def load_ply(
     filename, color="white", name="ply", dotSize=0.2, lineSize=0.5, doStatistics=False
