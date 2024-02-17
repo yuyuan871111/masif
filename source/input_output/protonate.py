@@ -29,6 +29,7 @@ def protonate(in_pdb_file, out_pdb_file, method="reduce"):
         args = [reduce_bin, "-HIS", out_pdb_file]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
+        # write the output to a file.
         outfile = open(out_pdb_file, "w")
         outfile.write(stdout.decode("utf-8"))
         outfile.close()
@@ -50,5 +51,8 @@ def protonate(in_pdb_file, out_pdb_file, method="reduce"):
         ]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
+
+    else:
+        raise ValueError(f"Unknown protonation method: {method}")
 
     return None
