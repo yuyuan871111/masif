@@ -17,7 +17,9 @@ def protonate(in_pdb_file, out_pdb_file, method="reduce"):
     in_pdb_file: file to protonate.
     out_pdb_file: output file where to save the protonated pdb file.
     """
-    if method == "reduce":
+    if method == None:
+        pass
+    elif method == "reduce":
         # Remove protons first, in case the structure is already protonated
         args = [reduce_bin, "-Trim", in_pdb_file]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
