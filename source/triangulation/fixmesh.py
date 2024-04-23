@@ -1,14 +1,13 @@
-import numpy as np
 import pymesh
 from numpy.linalg import norm
 
 """
-fixmesh.py: Regularize a protein surface mesh. 
-- based on code from the PyMESH documentation. 
+fixmesh.py: Regularize a protein surface mesh.
+- based on code from the PyMESH documentation.
 """
 
 
-def fix_mesh(mesh, resolution, detail="normal"):
+def fix_mesh(mesh, resolution, detail="normal", logging: bool = False):
     bbox_min, bbox_max = mesh.bbox
     diag_len = norm(bbox_max - bbox_min)
     if detail == "normal":
@@ -24,7 +23,8 @@ def fix_mesh(mesh, resolution, detail="normal"):
     mesh, _ = pymesh.remove_duplicated_vertices(mesh, 0.001)
 
     count = 0
-    print("Removing degenerated triangles")
+    if logging:
+        print("Removing degenerated triangles")
     mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
     mesh, __ = pymesh.split_long_edges(mesh, target_len)
     num_vertices = mesh.num_vertices
