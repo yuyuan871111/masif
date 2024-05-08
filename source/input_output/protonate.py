@@ -6,18 +6,19 @@ Released under an Apache License 2.0
 Modified by Yu-Yuan Yang (2024)
 """
 
+import os
 from subprocess import PIPE, Popen
 
 from ..default_config.global_vars import pdb2pqr_bin, reduce_bin
 
 
-def protonate(in_pdb_file, out_pdb_file, method="reduce"):
+def protonate(in_pdb_file, out_pdb_file, tmp_file_base=None, method="reduce"):
     """
     protonate (i.e., add hydrogens) a pdb using reduce and save to an output file.
     in_pdb_file: file to protonate.
     out_pdb_file: output file where to save the protonated pdb file.
     """
-    if method == None:
+    if method is None:
         pass
     elif method == "reduce":
         # Remove protons first, in case the structure is already protonated
@@ -37,8 +38,15 @@ def protonate(in_pdb_file, out_pdb_file, method="reduce"):
         outfile.close()
 
     elif method == "propka":
-        pqr_out_file = out_pdb_file.replace(".pdb", "")
-        apbs_in_file = out_pdb_file.replace(".pdb", ".in")
+        filename = out_pdb_file.replace(".pdb", "").split("/")[-1]
+        apbs_in_file = f"{tmp_file_base}/{filename}.in"
+        pqr_out_file = f"{tmp_file_base}/{filename}"
+
+        # Check if the dir exists
+        assert os.path.isdir(
+            tmp_file_base
+        ), f"Indicate the correct directory (Now: {tmp_file_base})."
+
         args = [
             pdb2pqr_bin,
             "--ff=CHARMM",
