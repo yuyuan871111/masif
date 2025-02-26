@@ -3,16 +3,18 @@ protonate.py: Wrapper method for the reduce program: protonate (i.e., add hydrog
                 and save to an output file.
 Pablo Gainza - LPDI STI EPFL 2019
 Released under an Apache License 2.0
-Modified by Yu-Yuan Yang (2024)
+Modified by Yu-Yuan Yang (2025)
 """
 
 import os
+import random
 from subprocess import PIPE, Popen
+from time import strftime
 
 from ..default_config.global_vars import pdb2pqr_bin, reduce_bin
 
 
-def protonate(in_pdb_file, out_pdb_file, tmp_file_base=None, method="reduce"):
+def protonate(in_pdb_file, out_pdb_file, method="reduce", keep_tempfiles=False):
     """
     protonate (i.e., add hydrogens) a pdb using reduce and save to an output file.
     in_pdb_file: file to protonate.
@@ -38,14 +40,15 @@ def protonate(in_pdb_file, out_pdb_file, tmp_file_base=None, method="reduce"):
         outfile.close()
 
     elif method == "propka":
+        # Create temporary directory
+        now = strftime("%y%m%d%H%M%S")
+        randnum = str(random.randint(1, 10000000))
+        tmp_file_base = f"{in_pdb_file.replace('.pdb', '')}_temp_{now}_{randnum}"
+        os.makedirs(tmp_file_base, exist_ok=False)
+
         filename = out_pdb_file.replace(".pdb", "").split("/")[-1]
         apbs_in_file = f"{tmp_file_base}/{filename}.in"
         pqr_out_file = f"{tmp_file_base}/{filename}"
-
-        # Check if the dir exists
-        assert os.path.isdir(
-            tmp_file_base
-        ), f"Indicate the correct directory (Now: {tmp_file_base})."
 
         args = [
             pdb2pqr_bin,
@@ -62,7 +65,13 @@ def protonate(in_pdb_file, out_pdb_file, tmp_file_base=None, method="reduce"):
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
 
+        if os.path.exists(out_pdb_file):
+            if keep_tempfiles:
+                return tmp_file_base
+            else:
+                os.system(f"rm -r {tmp_file_base}")
+        else:
+            raise Exception(f"Error in protonation. Check log file in {tmp_file_base}")
+
     else:
         raise ValueError(f"Unknown protonation method: {method}")
-
-    return None
