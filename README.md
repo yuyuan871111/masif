@@ -1,3 +1,10 @@
+## Important Notice
+
+This repository is a fork of the original MaSIF project: https://github.com/LPDI-EPFL/masif
+
+Modifications have been made to support Python 3.10 and integration with the FragBEST-Myo workflow.
+
+See `NOTICE` for details.
 
 ![MaSIF banner and concept](https://raw.githubusercontent.com/LPDI-EPFL/masif/master/img/Concept-01.png)
 

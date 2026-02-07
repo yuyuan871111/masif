@@ -1,0 +1,29 @@
+MaSIF (Molecular Surface Interaction Fingerprints)
+This repository is a fork and contains modifications of the MaSIF project.
+
+Upstream project:
+  https://github.com/LPDI-EPFL/masif
+
+Copyright (c) ORIGINAL COPYRIGHT 2019 - Gainza P, Sverrisson F, Monti F, Rodola, Bronstein MM, Correia BE
+Copyright (c) 2024-2026 Yu-Yuan (Stuart) Yang / Arianna Fornili's Lab (modifications)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+A copy of the License is provided in the LICENSE file in this repository
+and at http://www.apache.org/licenses/LICENSE-2.0
+
+Modifications in this fork:
+  - Adaptations for Python/packaging/environment compatibility
+  - Build/runtime fixes and integration changes
+  - Format the code
+  - Update APBS to 3.4.1 and PDB2PQR to 3.6.2
+  - Add new protonation method (prolif) and modify code for the related workflow (e.g. computing APBS for each vertex)
+  - Add new method for pymol plugin
+  - Add tests for third-party software
+
+Source for modifications:
+  https://github.com/yuyuan871111/masif
+(Optionally) Compare view / change log:
+  https://github.com/LPDI-EPFL/masif/compare/master...yuyuan871111:masif:master
+
+NOTICE: This product includes software developed by the MaSIF authors and contributors.
